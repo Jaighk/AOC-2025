@@ -13,33 +13,47 @@ def main() -> None:
         total_output_joltage += max_joltage
 
     print(f"Total output joltage: {total_output_joltage}")
-
         
 
 def get_joltage(bank: str) -> int:
-    tens_position: str = ""
-    tens_index: int = None
-    ones_position: str = ""
+    batteries_required = 12
+    enabled_batteries: str = ""
 
-    # Find highest batter from bank
-    for battery in bank[:-1]:
-        if not tens_position:
-            tens_position = battery
-            tens_index = bank.index(battery)
+    # Find highest battery from bank with enough room for all the batteries
+    first_battery, first_battery_index = get_first_battery(bank, batteries_required=batteries_required)
+    enabled_batteries += first_battery
+    enabled_batteries += get_rest_of_batteries(bank[first_battery_index:], batteries_required=batteries_required)
+    return int(enabled_batteries)
+
+
+def get_first_battery(bank: str, batteries_required: int) -> tuple[str, int]:
+    first_battery: str = str()
+    first_battery_index: int = int()
+
+    # find the highest battery that still leaves room for the other 11
+    for battery in bank[:-batteries_required]:
+        if not first_battery:
+            first_battery = battery
+            first_battery_index = bank.index(battery)
             continue
-        if int(battery) > int(tens_position):
-            tens_position = battery
-            tens_index = bank.index(battery)
+        if int(battery) > int(first_battery):
+            first_battery = battery
+            first_battery_index = bank.index(battery)
 
-    # Find highest battery to the right of the highest battery
-    for battery in bank[tens_index+1:]:
-        if not ones_position:
-            ones_position = battery
-            continue
-        if int(battery) > int(ones_position):
-            ones_position = battery
-    return int(tens_position + ones_position)
+    return first_battery, first_battery_index
 
+
+def get_rest_of_batteries(battery_pool: str, batteries_required: int, ) -> str:
+    remaining_batteries: list[str] = [battery for battery in battery_pool]
+    to_turn_off: int = len(battery_pool) - batteries_required
+
+    for i in range(to_turn_off):
+        lowest: str = remaining_batteries[0]
+        for battery in remaining_batteries[1:]:
+            if int(battery) < int(lowest):
+                lowest = battery
+        remaining_batteries.remove(lowest)
+    return "".join(remaining_batteries)
 
 
 def get_file(mode:str) -> str:
