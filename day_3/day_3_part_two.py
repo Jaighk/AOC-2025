@@ -4,6 +4,7 @@ def main() -> None:
     args: list[str] = sys.argv
     mode: str = args[1]
     file: str = get_file(mode)
+    test_value: int = 3121910778619
 
     banks: list[str] = [line.strip() for line in open(file=file, mode="r")]
     total_output_joltage: int = 0
@@ -11,18 +12,20 @@ def main() -> None:
     for bank in banks:
         max_joltage: int = get_joltage(bank)
         total_output_joltage += max_joltage
-
+    
+    print(f"Test val: {test_value}")
     print(f"Total output joltage: {total_output_joltage}")
+    print(f"Diff = {test_value - total_output_joltage}")
         
 
 def get_joltage(bank: str) -> int:
-    batteries_required = 12
+    batteries_required: int = 12
     enabled_batteries: str = ""
 
     # Find highest battery from bank with enough room for all the batteries
     first_battery, first_battery_index = get_first_battery(bank, batteries_required=batteries_required)
     enabled_batteries += first_battery
-    enabled_batteries += get_rest_of_batteries(bank[first_battery_index:], batteries_required=batteries_required)
+    enabled_batteries += get_rest_of_batteries(battery_pool=bank[first_battery_index+1:], batteries_required=batteries_required-1)
     return int(enabled_batteries)
 
 
@@ -44,16 +47,11 @@ def get_first_battery(bank: str, batteries_required: int) -> tuple[str, int]:
 
 
 def get_rest_of_batteries(battery_pool: str, batteries_required: int, ) -> str:
-    remaining_batteries: list[str] = [battery for battery in battery_pool]
-    to_turn_off: int = len(battery_pool) - batteries_required
-
-    for i in range(to_turn_off):
-        lowest: str = remaining_batteries[0]
-        for battery in remaining_batteries[1:]:
-            if int(battery) < int(lowest):
-                lowest = battery
-        remaining_batteries.remove(lowest)
-    return "".join(remaining_batteries)
+    remaining_batteries: list[int] = [int(battery) for battery in battery_pool]
+    while len(remaining_batteries) != batteries_required:
+        remaining_batteries.remove(min(remaining_batteries))
+    remaining_batteries = "".join([str(battery) for battery in remaining_batteries])
+    return remaining_batteries
 
 
 def get_file(mode:str) -> str:
