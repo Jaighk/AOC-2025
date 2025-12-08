@@ -1,3 +1,4 @@
+import math
 import sys
 
 TEST_ANS: int = 4277556
@@ -9,8 +10,15 @@ def main() -> None:
     clean_input(input)
     problem_answers: list[int] = solve_problems(input)
     grand_total: int = sum(problem_answers)
+
+    # Part 1
+    print("Part One")
     print(f"Grand Total: {grand_total}")
     print(f"Diff: {TEST_ANS - grand_total}")
+
+    # Part 2
+    print("Part Two")
+    print(f"{solve_part_two(input)}")
 
 
 def get_input_file(mode: str) -> str:
@@ -38,20 +46,11 @@ def solve_problems(input: list[str]) -> list[int]:
 
         match operator:
             case "*":
-                print(f"prod = {prod(nums)}")
-                answers.append(prod(nums))
+                answers.append(math.prod(nums))
             case "+":
-                print(f"prod = {sum(nums)}")
                 answers.append(sum(nums))
         i += 1
     return answers
-
-
-def prod(list_nums: list[int]) -> int:
-    prod: int = 1
-    for i in list_nums:
-        prod *= i
-    return prod
 
 
 if __name__ == "__main__":
