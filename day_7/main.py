@@ -1,13 +1,14 @@
 import sys
 from collections import defaultdict
 
-
+# constants
 START: str = "S"
 SPACE: str = "."
 SPLITTER: str = "^"
 BEAM: str = "|"
+
+# globals
 split_count: int = 0
-beam_locations: list[int] = []
 
 
 def main() -> None:
@@ -16,14 +17,14 @@ def main() -> None:
     input: list[str] | list[list[str]] = [
         line for line in open(file=input_file_path, mode="r")
     ]
-    for string in range(len(input)):
-        input[string] = list(input[string].strip())
+    for i in range(len(input)):
+        input[i] = list[str](input[i].strip())
     
-    beams = {input[0].index("S"): 1}
+    beams: dict[int, int]= {input[0].index("S"): 1}
 
     for i in range(1, len(input)): 
         line = input[i]
-        new_beams = defaultdict(int)
+        new_beams: defaultdict[int, int] = defaultdict[int, int](int)
         for k, v in beams.items():
             if line[k] == SPACE:
                 new_beams[k] += v
@@ -31,11 +32,10 @@ def main() -> None:
                 split_count += 1
                 new_beams[k - 1] += v
                 new_beams[k + 1] += v
-        beams = new_beams
+        beams: defaultdict[int, int] = new_beams
 
     print(f"{split_count = }")
     print(f"{sum(beams.values())}")
-
 
 
 def get_input_file(mode: str) -> str:
