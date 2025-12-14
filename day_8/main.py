@@ -1,6 +1,20 @@
+import math
 import sys
 
-from AOC-2025.day_8.coords import Coord
+
+class Coord:
+    def __init__(self, x, y, z):
+        self.x: int = x
+        self.y: int = y
+        self.z: int = z
+        self.conns: list[Coord] = []
+
+    def __repr__(self):
+        string: str = f"""x: {self.x}
+y: {self.y}
+z: {self.z}
+conns: {self.conns}"""
+        return string
 
 
 def get_input_file(mode: str) -> str:
@@ -16,6 +30,14 @@ def get_boxes(input: list[str]):
         x, y, z = coord.split(sep=",")
         box = Coord(x, y, z)
         boxes.append(box)
+
+
+def calculate_distance(point_one: Coord, point_two: Coord) -> float:
+    return math.sqrt(
+        (point_one.x - point_two.x) ** 2
+        + math.sqrt(point_one.y - point_two.y) ** 2
+        + math.sqrt(point_one.z - point_two.z) ** 2
+    )
 
 
 # globals
