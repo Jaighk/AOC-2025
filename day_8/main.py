@@ -1,12 +1,12 @@
-import math
+import cmath
 import sys
 
 
 class Coord:
     def __init__(self, x, y, z):
-        self.x: int = x
-        self.y: int = y
-        self.z: int = z
+        self.x: int = int(x)
+        self.y: int = int(y)
+        self.z: int = int(z)
         self.conns: list[Coord] = []
 
     def __repr__(self):
@@ -15,6 +15,10 @@ y: {self.y}
 z: {self.z}
 conns: {self.conns}"""
         return string
+
+
+# globals
+boxes: list[Coord] = []
 
 
 def get_input_file(mode: str) -> str:
@@ -32,16 +36,18 @@ def get_boxes(input: list[str]):
         boxes.append(box)
 
 
-def calculate_distance(point_one: Coord, point_two: Coord) -> float:
-    return math.sqrt(
-        (point_one.x - point_two.x) ** 2
-        + math.sqrt(point_one.y - point_two.y) ** 2
-        + math.sqrt(point_one.z - point_two.z) ** 2
+def calculate_distance(point_one: Coord, point_two: Coord):
+    # delta_x: float = point_one.x - point_two.x
+    # delta_y: float = point_one.y - point_two.y
+    # delta_z: float = point_one.z - point_two.z
+
+    return cmath.sqrt(
+        abs(
+            (point_one.x - point_two.x) ** 2
+            + (point_one.y - point_two.y) ** 2
+            + (point_one.z - point_two.z) ** 2
+        )
     )
-
-
-# globals
-boxes: list[Coord] = []
 
 
 def main() -> None:
@@ -50,6 +56,9 @@ def main() -> None:
     input: list[str] = [line.strip() for line in open(file=input_file_path, mode="r")]
 
     get_boxes(input)
+    for i in range(len(boxes)):
+        if i != len(boxes) - 1:
+            print(f"Distance: {calculate_distance(boxes[i], boxes[i + 1])}")
 
 
 if __name__ == "__main__":
